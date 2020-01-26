@@ -36,7 +36,7 @@ router.post('/', function(req, res){
              
             response.statusHttp = 200;
             response.statusBool = true;
-            response.message = "Updated Sucessfully";
+            response.message = "New employee added Sucessfully";
             response.employee=employee;
         }
         else {
@@ -79,6 +79,36 @@ router.post('/', function(req, res){
                         Report_to: constant.Ceo
                     }
                     req.params.position= constant.Manager;
+    
+                    Employee.updatepositionEmployee( req.params, update, function(err,employee1){
+                        if (!err) {
+                            
+                             Employee.deleteEmployee(req.params._id ,  function(err,employee2){
+    
+                                if (!err) { 
+                                    response.statusHttp = 200;
+                                    response.statusBool = true;
+                                    response.message = "Deleted Sucessfully ";
+                                    }else {
+                                        response.statusHttp = 4001;
+                                        response.statusBool = false;
+                                        response.message = err;
+                                    }
+                                     res.json(response);
+                              }); 
+                           
+                        }else {
+                            response.statusHttp = 4002;
+                            response.statusBool = false;
+                            response.message = err;
+                        }                      
+                        res.json(response);
+                    });
+                }else if((employee.position===constant.Manager)){
+                    var update = { 
+                        Report_to: constant.Ceo
+                    }
+                    req.params.position= constant.ceo;
     
                     Employee.updatepositionEmployee( req.params, update, function(err,employee1){
                         if (!err) {
